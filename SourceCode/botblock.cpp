@@ -115,16 +115,12 @@ int tcpch()
 	int nument;
 	if ((dwRetVal = GetTcpTable2(pTcpTable, &ulSize, TRUE)) == NO_ERROR) {
 
-		nument = (int)pTcpTable->dwNumEntries;
-
 		for (i = 0; i < (int)pTcpTable->dwNumEntries; i++) {
 
-			IpAddr.S_un.S_addr = (u_long)pTcpTable->table[i].dwLocalAddr;
-			strcpy_s(srAddr, sizeof(srAddr), inet_ntoa(IpAddr));
 			IpAddr.S_un.S_addr = (u_long)pTcpTable->table[i].dwRemoteAddr;
 			strcpy_s(drAddr, sizeof(drAddr), inet_ntoa(IpAddr));
 			pid = (unsigned int)pTcpTable->table[i].dwOwningPid;
-
+			
 			cmatch narrowMatch;
 
 			const char * ss;

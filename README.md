@@ -5,7 +5,7 @@ This is a Microsoft Windows Application,the purpose of this tool is to detect th
 I have created a windows installer for this,installation steps are basic,once the tool has installed you can find the exe short cut in the desktop. The tool will automatically start during the startup.Please contact me at sreeju_kc@hotmail.com if you have any questions related to this.
 
 https://sourceforge.net/projects/botblocks/
-please use above file to download .msi file and procedure document for installation and usage.
+please use the sourceforge link to  download the .msi installation file and procedure document for installation and usage.
 
 This is a free tool,its created for information security awareness. Big thanks to Microsoft MSDN for helping me to build Windows Application, and various internet resources for helping me to collect some malicious IP address.
 

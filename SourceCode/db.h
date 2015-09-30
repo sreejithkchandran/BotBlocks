@@ -17,15 +17,21 @@ int inserts(char *ip)
 	{
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(dbf));
 		return 10;
+		exit(10);
 	}
 
 	char *zSQL = sqlite3_mprintf("INSERT INTO malicious VALUES('%s')", ip);
-	rc = sqlite3_exec(dbf, zSQL, 0, 0, NULL);
-	sqlite3_free(zSQL);
+
+	sqlite3_prepare_v2(dbf, zSQL, -1, &res, 0);
+
+	sqlite3_bind_text(res, 1, ip, strlen(ip), SQLITE_STATIC);
+	rc = sqlite3_step(res);
+	sqlite3_reset(res);
 
 	if (rc == 0) {
 		return 0;
 	}
+	sqlite3_finalize(res);
 	sqlite3_close(dbf);
 	return 101;
 
@@ -46,6 +52,7 @@ int selects(char *ip)
 	{
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 		return 10;
+		exit(10);
 	}
 
 	char *sql = "SELECT * FROM malicious WHERE IP=?";
@@ -59,7 +66,7 @@ int selects(char *ip)
 
 	sqlite3_finalize(res);
 	sqlite3_close(db);
-
+	return 101;
 
 }
 
@@ -76,6 +83,7 @@ int cselects(char *ip)
 	{
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(dbs));
 		return 10;
+		exit(10);
 	}
 
 	char *sql = "SELECT * FROM malicious WHERE IP=?";
@@ -83,6 +91,7 @@ int cselects(char *ip)
 	sqlite3_prepare_v2(dbs, sql, -1, &res, 0);
 	sqlite3_bind_text(res, 1, ip, strlen(ip), SQLITE_STATIC);
 	rc = sqlite3_step(res);
+	sqlite3_reset(res);
 
 	if (rc == SQLITE_ROW) {
 		return 100;

@@ -160,7 +160,7 @@ void message(char * mess, char * fbip,DWORD dwProcessId)
 	switch (msgboxID)
 	{
 	case IDYES:
-		killhim(dwProcessId);
+		//killhim(dwProcessId);
 		fwblock(fbip);
 		inserts(fbip);
 		break;

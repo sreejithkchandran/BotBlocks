@@ -86,9 +86,9 @@ int tcpch()
 	char drAddr[128];
 
 	struct in_addr IpAddr;
-	FILE *logs;
+	/* FILE *logs;
 
-	logs = fopen("C:\\BotBlock\\botnetlogs.txt", "a");
+	logs = fopen("C:\\BotBlock\\botnetlogs.txt", "a"); */
 
 
 	char malip[256];
@@ -115,12 +115,16 @@ int tcpch()
 	int nument;
 	if ((dwRetVal = GetTcpTable2(pTcpTable, &ulSize, TRUE)) == NO_ERROR) {
 
+		nument = (int)pTcpTable->dwNumEntries;
+
 		for (i = 0; i < (int)pTcpTable->dwNumEntries; i++) {
 
+			IpAddr.S_un.S_addr = (u_long)pTcpTable->table[i].dwLocalAddr;
+			strcpy_s(srAddr, sizeof(srAddr), inet_ntoa(IpAddr));
 			IpAddr.S_un.S_addr = (u_long)pTcpTable->table[i].dwRemoteAddr;
 			strcpy_s(drAddr, sizeof(drAddr), inet_ntoa(IpAddr));
 			pid = (unsigned int)pTcpTable->table[i].dwOwningPid;
-			
+
 			cmatch narrowMatch;
 
 			const char * ss;
@@ -142,20 +146,33 @@ int tcpch()
 						strtok(time, "\n");
 						char *inf = " : You have tried to contact a malicious IP address ";
 						char *info = " , please contact your local administrator immediatly ";
-						if (logs) {
-							fprintf(logs, "%s%s%s%s", time, inf, drAddr, info);
-							fprintf(logs, "-------------------------------------------------------------------------------------------------------------------------------------\n");
-							fprintf(logs, "\n");
-							fclose(logs);
-						}
+						FILE *lgs;
+						lgs = fopen("C:\\BotBlock\\botnetlogs.txt", "a");
+						if (lgs != NULL) {
+							fprintf(lgs, "%s%s%s%s", time, inf, drAddr, info);
+							Sleep(50);
+							fprintf(lgs, "\n");
+							Sleep(20);
+							fprintf(lgs, "----------------------------------------------------------------------------------------------------------------------------------------------\n");
+							Sleep(50);
+							fprintf(lgs, "\n");
+							Sleep(50);
+							//fclose(lgs);
+							//return 0;
+						} 
 						char mess[1000] = "You are trying to contact a malicious IP ";
 						char mm[500] = "\nPlease check the logs in C:\\BotBlock\\botlogs.txt\nPlease click 'Yes' to block in local firewall,click 'No' to whitelist";
 						strcat(mess, drAddr);
 						strcat(mess, mm);
 						DWORD dwProcessId = (DWORD)pid;
 						message(mess,drAddr,dwProcessId);
+						if (lgs) {
+							fclose(lgs);
+						}
 						
 					}
+					
+
 				}
 
 			}
@@ -172,5 +189,7 @@ int tcpch()
 	if (pTcpTable != NULL) {
 		FREE(pTcpTable);
 		pTcpTable = NULL;
+		return 0;
 	}
+	return 0;
 }

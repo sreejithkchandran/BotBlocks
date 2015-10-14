@@ -12,7 +12,6 @@
 void message(char *mess, char *fbip, DWORD dwProcessId);
 int __cdecl fwblock(char *ip);
 HRESULT     WFCOMInitialize(INetFwPolicy2** ppNetFwPolicy2);
-BOOL killhim(DWORD dwProcessId);
 
 int __cdecl fwblock(char *ip)
 {
@@ -160,7 +159,6 @@ void message(char * mess, char * fbip,DWORD dwProcessId)
 	switch (msgboxID)
 	{
 	case IDYES:
-		//killhim(dwProcessId);
 		fwblock(fbip);
 		inserts(fbip);
 		break;
@@ -170,19 +168,4 @@ void message(char * mess, char * fbip,DWORD dwProcessId)
 
 
 	}
-}
-
-BOOL killhim(DWORD dwProcessId)
-{
-	DWORD dwAccess = PROCESS_TERMINATE;
-	BOOL  InheritHandle = FALSE;
-	HANDLE hProcess = OpenProcess(dwAccess, InheritHandle, dwProcessId);
-	if (hProcess == NULL)
-		return FALSE;
-
-	BOOL result = TerminateProcess(hProcess, 1);
-
-	CloseHandle(hProcess);
-
-	return result;
 }

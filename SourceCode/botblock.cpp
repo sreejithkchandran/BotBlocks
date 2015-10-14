@@ -23,6 +23,9 @@ __license__ = "Apache License 2.0"
 #include "db.h"
 #include <Windows.h>
 #include "fwblock.h"
+#include <cstdio>
+#include <tlhelp32.h>
+
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")
 
@@ -32,6 +35,7 @@ __license__ = "Apache License 2.0"
 using namespace std;
 
 int c = 0;
+int counts = 0;
 char dip[256] = { 0 };
 char rip[256] = { 0 };
 regex rp("^(192\.168\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
@@ -51,17 +55,18 @@ int tcpch();
 int selects(char *ip);
 int inserts(char *ip);
 int cselects(char *ip);
+void messageout(char * mess, char * title);
+int proces();
 
 int main()
 {
 	FreeConsole();
+	proces();
 	while (TRUE) {
 		tcpch();
 		Sleep(1000);
 
 	}
-
-
 
 	return 0;
 }
@@ -76,19 +81,13 @@ int tcpch()
 	ULONG ulSize = 0;
 	unsigned int pid;
 
-	/*LPCTSTR path = "C:\\botdetect";
-	int retval = PathFileExists(path);
-	if (!retval) {
-		CreateDirectory(path, NULL);
-	}*/
+
 
 	char srAddr[128];
 	char drAddr[128];
 
 	struct in_addr IpAddr;
-	/* FILE *logs;
-
-	logs = fopen("C:\\BotBlock\\botnetlogs.txt", "a"); */
+	
 
 
 	char malip[256];
@@ -157,8 +156,7 @@ int tcpch()
 							Sleep(50);
 							fprintf(lgs, "\n");
 							Sleep(50);
-							//fclose(lgs);
-							//return 0;
+
 						} 
 						char mess[1000] = "You are trying to contact a malicious IP ";
 						char mm[500] = "\nPlease check the logs in C:\\BotBlock\\botlogs.txt\nPlease click 'Yes' to block in local firewall,click 'No' to whitelist";
@@ -168,6 +166,7 @@ int tcpch()
 						message(mess,drAddr,dwProcessId);
 						if (lgs) {
 							fclose(lgs);
+							
 						}
 						
 					}
@@ -191,5 +190,36 @@ int tcpch()
 		pTcpTable = NULL;
 		return 0;
 	}
+	return 0;
+}
+
+int proces()
+{
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+	if (Process32First(snapshot, &entry) == TRUE)
+	{
+		while (Process32Next(snapshot, &entry) == TRUE)
+		{
+			if (_stricmp(entry.szExeFile, "botblock.exe") == 0)
+			{
+				counts++;
+				if (counts >= 2) {
+					char mess[1000] = "botblock.exe is already running hence exiting the new process ";
+					char title[500] = "Error,Process alreay running";
+					messageout(mess, title);
+					exit(10);
+				}
+				
+			}
+
+		}
+	}
+
+	CloseHandle(snapshot);
+
 	return 0;
 }

@@ -1,7 +1,13 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
 #include "sqlite3.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#pragma comment(lib, "shlwapi.lib")
+
+void messageout(char * mess, char * title);
 
 int inserts(char *ip)
 {
@@ -11,6 +17,16 @@ int inserts(char *ip)
 	int rc;
 	char *errMSG;
 	const char *tail;
+
+	LPCTSTR path = "C:\\BotBlock\\exclude.db";
+	int retval = PathFileExists(path);
+	if (!retval) {
+		char mess[1000] = "I can not find 'exclude.db' file, please make sure its in the C:\BotBlock\ folder ";
+		char title[500] = "Database Error";
+		messageout(mess, title);
+		exit(10);
+		
+	}
 
 	int error = sqlite3_open("C:\\BotBlock\\exclude.db", &dbf);
 	if (error)
@@ -47,6 +63,16 @@ int selects(char *ip)
 	char *errMSG;
 	const char *tail;
 
+	LPCTSTR path = "C:\\BotBlock\\maliciousIP.db";
+	int retval = PathFileExists(path);
+	if (!retval) {
+		char mess[1000] = "I can not find 'maliciousIP.db' file, please make sure its in the C:\BotBlock\ folder ";
+		char title[500] = "Database Error";
+		messageout(mess, title);
+		exit(10);
+
+	}
+
 	int error = sqlite3_open("C:\\BotBlock\\maliciousIP.db", &db);
 	if (error)
 	{
@@ -78,6 +104,18 @@ int cselects(char *ip)
 	int rc;
 	char *errMSG;
 	const char *tail;
+
+	LPCTSTR path = "C:\\BotBlock\\exclude.db";
+
+	int retval = PathFileExists(path);
+	if (!retval) {
+		char mess[1000] = "I can not find 'exclude.db' file, please make sure its in the C:\BotBlock\ folder ";
+		char title[500] = "Database Error";
+		messageout(mess, title);
+		exit(10);
+
+	}
+
 	int error = sqlite3_open("C:\\BotBlock\\exclude.db", &dbs);
 	if (error)
 	{
@@ -101,4 +139,19 @@ int cselects(char *ip)
 	sqlite3_close(dbs);
 	return 101;
 
+}
+
+void messageout(char * mess, char * title)
+{
+	int msgboxID = MessageBox(
+		NULL,
+		mess,
+		title,
+		MB_ICONERROR | MB_OK);
+
+	switch (msgboxID)
+	{
+	case IDOK:
+		break;
+	}
 }

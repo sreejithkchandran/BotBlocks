@@ -40,7 +40,6 @@ char dip[256] = { 0 };
 char rip[256] = { 0 };
 regex rp("^(192\.168\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
 regex rs("^(172\.(1[6-9]|2[0-9]|3[0-1])\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
-regex rc("^(169\.254\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
 regex rx("^(10\.(([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.){2}([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
 regex rr("^(127\.(([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.){2}([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
 regex rk("^(0\.(([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.){2}([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))$");
@@ -131,7 +130,7 @@ int tcpch()
 			const char *sss = ss + strlen(ss);
 
 
-			if (!((mathx = regex_match(ss, sss, narrowMatch, rx)) || (maths = regex_match(ss, sss, narrowMatch, rs)) || (mathp = regex_match(ss, sss, narrowMatch, rp)) || (mathc = regex_match(ss, sss, narrowMatch, rc)) || (mathr = regex_match(ss, sss, narrowMatch, rr)) || (mathk = regex_match(ss, sss, narrowMatch, rk)))) {
+			if (!((mathx = regex_match(ss, sss, narrowMatch, rx)) || (maths = regex_match(ss, sss, narrowMatch, rs)) || (mathp = regex_match(ss, sss, narrowMatch, rp)) || (mathr = regex_match(ss, sss, narrowMatch, rr)) || (mathk = regex_match(ss, sss, narrowMatch, rk)))) {
 				int selc = selects(drAddr);
 				if (selc == 100) {
 					int csel = cselects(drAddr);
